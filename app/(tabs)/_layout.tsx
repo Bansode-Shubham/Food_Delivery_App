@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { router, Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 
@@ -8,7 +8,10 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
+import { Pressable } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 /**
  * The top-level component for the app, which renders the tab bar and each
@@ -23,6 +26,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
  */
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const navigation = useNavigation<any>();
 
   return (
     <Tabs
@@ -38,33 +42,49 @@ export default function TabLayout() {
           },
           default: {},
         }),
+        
       }}
     >
-      <Tabs.Screen name="index" options={{
-        headerShown: false,
-        href: null
-      }} />
+      <Tabs.Screen
+        name="index"
+        options={{
+          headerShown: false,
+          href: null,
+        }}
+      />
+
       <Tabs.Screen
         name="menu"
         options={{
           headerShown: false,
           title: "Menu",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="menu" color={color} size={size} />
-            ),
-        
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="restaurant" color={color} size={size} />
+          ),
         }}
       />
+      <Tabs.Screen
+        name="cart"
+        options={{
+          headerShown: false,
+          title: "Cart",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="shopping-cart" color={color} size={size} />
+          ),
+        }}
+      />
+   
       <Tabs.Screen
         name="explore"
         options={{
           headerShown: false,
           title: "Orders",
           tabBarIcon: ({ color, size }) => (
-            <Icon name="shopping-cart" color={color} size={size} />
+            <Icon name="list" color={color} size={size} />
           ),
         }}
       />
-    </Tabs>
+       </Tabs>
+      
   );
 }

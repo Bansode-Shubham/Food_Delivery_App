@@ -1,11 +1,13 @@
 import { View, Text, Image, StyleSheet,Pressable } from "react-native";
 import React from "react";
 import { ThemedText } from "@/components/ThemedText";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import products from "@/assets/products";
 import Button from "@/components/Button_react_paper";
+import {useCart} from "../../providers/CartProvider";
+import { PizzaSize } from "@/assets/types";
 
-const sizes =['S','M','L','XL'];
+const sizes:PizzaSize[] =['S','M','L','XL'];
 
 /**
  * ProductListItem is a React functional component that renders a product item
@@ -16,12 +18,25 @@ const sizes =['S','M','L','XL'];
 
 
 const ProductListItem = () => {
+  const {addItem} = useCart();
+  const router = useRouter();
   const addToCart = () => {
     console.log(`Added to cart and selected size ${selectedSize}`);
+    if(!product){
+      return;
+
+    }
+    else{
+      addItem(product,selectedSize);
+      router.push("/cart")
+
+    }
   };
+
 const { id } = useLocalSearchParams();
 
-const [selectedSize, setSelectedSize] = React.useState<string | null>('M');
+
+const [selectedSize, setSelectedSize] = React.useState<PizzaSize>('M');
 
 const product = products.find((product) => product.id === Number(id));
 
