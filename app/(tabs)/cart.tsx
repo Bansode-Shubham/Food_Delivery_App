@@ -1,5 +1,6 @@
-import { View, Text , FlatList, SafeAreaView } from "react-native";
+import { View, Text , FlatList, SafeAreaView} from "react-native";
 import { ThemedText } from "../../components/ThemedText";
+import Button from "@/components/Button_react_paper";
 
 import {  useCart } from "../providers/CartProvider";
 import CartListItem from "@/components/CartListItem";
@@ -7,17 +8,18 @@ import React from "react";
 
 
 const CartScreen = () => {
-  const { items } = useCart();
+  const { items ,total } = useCart();
   return (
     <SafeAreaView>
    
-    <View style={{paddingTop:50}}>
+    <View style={{padding:30}}>
     <ThemedText>Cart Screen</ThemedText>
 
       <FlatList 
       contentContainerStyle={{padding:10, gap:10}}
        data={items} renderItem={({item}) => <CartListItem cartItem={item} />} />
-      
+      <ThemedText>Total: ${total.toFixed(2)}</ThemedText>
+      <Button onPress={() => console.log("Checkout")} text="Checkout" />
     </View>
     </SafeAreaView>
   );
