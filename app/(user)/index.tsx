@@ -6,5 +6,5 @@ import React from "react";
  * menu screen when the app is opened.
  */
 export default function TabIndex() {
-  return <Redirect href={"/menu/"} />;
+  return <Redirect href={"/(user)/menu/"} />;
 }

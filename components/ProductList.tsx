@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import products from "@/assets/products";
-import { Link } from "expo-router";
+import { Link, useSegments } from "expo-router";
 
 interface Product {
   id: number;
@@ -10,7 +10,10 @@ interface Product {
 }
 
 const ProductListItem = ({ product }: { product: Product }) => {
+  const segment = useSegments();
+  console.log(segment);
   return (
+    
     <Link href={`/menu/${product.id}`} asChild>
       <Pressable style={styles.Container}>
         <Image
