@@ -49,7 +49,7 @@ export default function RootLayout() {
         <Stack initialRouteName="(user)">
         <Stack.Screen name="(admin)" options={{ headerShown: false }} />
           <Stack.Screen name="(user)" options={{ headerShown: false }} />
-               
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />   
           <Stack.Screen name="+not-found" />
         </Stack>
         </CartProvider>

@@ -78,7 +78,7 @@ export default function TabLayout() {
       
    
       <Tabs.Screen
-        name="explore"
+        name="orders"
         options={{
           headerShown: false,
           title: "Orders",

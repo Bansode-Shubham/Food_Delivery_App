@@ -1,9 +1,5 @@
 import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
+ 
   FlatList,
 } from "react-native";
 
@@ -18,10 +14,7 @@ type Product = {
   price: number;
 };
 import React from "react";
-import Button from "../../../components/Button_react_paper";
-import Banner from "../../../components/Banner";
-import Icons from "../../../components/icons";
-import Menu from "../../../components/menu";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import ProductListItem from "@/components/ProductList";
