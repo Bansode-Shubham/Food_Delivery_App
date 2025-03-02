@@ -1,14 +1,28 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { TextInput, Button, Text } from "react-native-paper";
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
+import { supabase } from "@/lib/superbase";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+
+
+  async function signUpWithEmail() {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      
+      email: email,
+      password: password,
+    });
+  
+    if (error) Alert.alert(error.message);
+    setLoading(false);
+  }
 
   const handleSignUp = async () => {
     setLoading(true);
@@ -26,13 +40,13 @@ export default function SignUp() {
     <View style={styles.container}>
       <ThemedText style={styles.title}>Create Account</ThemedText>
 
-      <TextInput
+      {/* <TextInput
         label="Full Name"
         value={name}
         onChangeText={setName}
         mode="outlined"
         style={styles.input}
-      />
+      /> */}
 
       <TextInput
         label="Email"
@@ -55,7 +69,7 @@ export default function SignUp() {
 
       <Button
         mode="contained"
-        onPress={handleSignUp}
+        onPress={signUpWithEmail}
         loading={loading}
         style={styles.button}
       >

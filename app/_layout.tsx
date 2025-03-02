@@ -14,6 +14,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import React from "react";
 
 import CartProvider from "./providers/CartProvider";
+import AuthProvider from "./providers/AuthProvider";
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -45,6 +47,7 @@ export default function RootLayout() {
   return (
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <AuthProvider>
         <CartProvider >
         <Stack initialRouteName="(user)">
         <Stack.Screen name="(admin)" options={{ headerShown: false }} />
@@ -53,6 +56,7 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
         </Stack>
         </CartProvider>
+        </AuthProvider>
         <StatusBar style="auto" />
       </ThemeProvider>
     </>

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { TextInput, Button, Title } from 'react-native-paper';
 import { router } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
+import { supabase } from "@/lib/superbase";
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
@@ -11,15 +12,14 @@ export default function SignIn() {
 
     const handleSignIn = async () => {
         setLoading(true);
-        try {
-            // Add your authentication logic here
-            
-            router.replace('/(user)');
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+        router.push('/');
+      
+        if (error) Alert.alert(error.message);
+        setLoading(false);
     };
 
     return (

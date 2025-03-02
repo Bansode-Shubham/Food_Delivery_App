@@ -1,4 +1,4 @@
-import { router, Tabs } from "expo-router";
+import { Redirect, router, Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 
@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Pressable } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { useAuth } from "../providers/AuthProvider";
 
 /**
  * The top-level component for the app, which renders the tab bar and each
@@ -27,6 +28,11 @@ import { FontAwesome } from "@expo/vector-icons";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const navigation = useNavigation<any>();
+  // const {isAdmin} = useAuth();
+
+  // if(!isAdmin){
+  //   return <Redirect href={'/'} />;
+  // }
 
   return (
     <Tabs
