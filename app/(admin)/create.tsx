@@ -7,17 +7,36 @@ const defaultPizzaImage =
 
 import { useCart } from "../providers/CartProvider";
 import CartListItem from "@/components/CartListItem";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInput } from "react-native-paper";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { useDeleteProduct, useInsertProduct, useProduct, useUpdateProduct } from "../api/product";
 
 const CreateproductScreen = () => {
   const [name, setName] = React.useState("");
   const [price, setPrice] = React.useState("");
   const [Error, setError] = React.useState("");
   const [image, setImage] = useState<string | null>(null);
-  const {id} = useLocalSearchParams();
-  const updating = !!id;
+  const { id: idString } = useLocalSearchParams();
+  
+  const id = parseFloat(typeof idString === "string" ? idString : idString?.[0]);
+
+  const  updating = !!id;
+
+
+  const { mutate: insertProduct } = useInsertProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+  const { data: updatingProduct } = useProduct(id);
+  const { mutate: deleteProduct } = useDeleteProduct();
+
+
+  useEffect(() => {
+    if (updatingProduct) {
+      setName(updatingProduct.name);
+      setPrice(updatingProduct.price.toString());
+      setImage(updatingProduct.image);
+    }
+  }, [updatingProduct]);
 
   const confirmdelete = () => {
     Alert.alert(
@@ -31,16 +50,20 @@ const CreateproductScreen = () => {
         { text: "Delete", onPress: onDelete },
       ]
     );
-  
+
     console.log("Product deleted");
-    resetFields();
-    setError("Product deleted");
-  }
+    
+    
+  };
 
   const onDelete = () => {
-    console.log("Product deleted");
-   
-  }
+    deleteProduct(id, {
+      onSuccess: () => {
+        resetFields();
+        router.push("/(admin)");
+      },
+    });
+  };
 
   const onSubmit = () => {
     if (updating) {
@@ -53,13 +76,21 @@ const CreateproductScreen = () => {
   const onUpdate = () => {
     if (!validateFields()) {
       return;
-    }else{
-
-    console.log("Product updated", { name, price });
-    resetFields();
-    setError("Product updated");
+    } else {
+      console.log("Product updated", { name, price });
+      updateProduct(
+        { name, price: parseFloat(price), image, id },
+        {
+          onSuccess: () => {
+            resetFields();
+            router.back();
+          
+            
+          },
+        }
+      );
     }
-  }
+  };
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -80,7 +111,6 @@ const CreateproductScreen = () => {
   const resetFields = () => {
     setName("");
     setPrice("");
-    
     setImage(null);
     setError("");
   };
@@ -111,15 +141,15 @@ const CreateproductScreen = () => {
       return;
     } else {
       console.log("Product created", { name, price });
-
-      resetFields();
-      setError("Product created");
-      const errorTextStyle = {
-        color: "green",
-        marginBottom: 10,
-        fontSize: 16,
-        textAlign: "center",
-      };
+      insertProduct(
+        { name, price: parseFloat(price), image },
+        {
+          onSuccess: () => {
+            resetFields();
+            router.back();
+          },
+        }
+      );
     }
   };
 
@@ -141,15 +171,13 @@ const CreateproductScreen = () => {
           }}
         >
           {updating ? "Update Product" : "Create New Product"}
-         
         </ThemedText>
 
         <Image
-          source={{ uri: image || defaultPizzaImage  }}
+          source={{ uri: image || defaultPizzaImage }}
           style={{
             width: 200,
             height: 200,
-           
           }}
         />
 
@@ -194,9 +222,8 @@ const CreateproductScreen = () => {
         >
           {Error}
         </ThemedText>
-        <Button text={ updating ? "Update" : "Create" } onPress={onSubmit} />
+        <Button text={updating ? "Update" : "Create"} onPress={onSubmit} />
         {updating && <Button text="Delete" onPress={confirmdelete} />}
-
       </View>
     </SafeAreaView>
   );
