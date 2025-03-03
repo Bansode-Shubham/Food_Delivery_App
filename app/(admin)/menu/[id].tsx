@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet,Pressable } from "react-native";
+import { View, Text, Image, StyleSheet,Pressable, ActivityIndicator } from "react-native";
 import React from "react";
 import { ThemedText } from "@/components/ThemedText";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -6,6 +6,7 @@ import products from "@/assets/products";
 import Button from "@/components/Button_react_paper";
 import {useCart} from "../../providers/CartProvider";
 import { PizzaSize } from "@/assets/types";
+import { useProduct } from "@/app/api/product";
 
 
 const sizes:PizzaSize[] =['S','M','L','XL'];
@@ -19,9 +20,9 @@ const sizes:PizzaSize[] =['S','M','L','XL'];
 
 
 const ProductListItem = () => {
-  const { id } = useLocalSearchParams();
-  const isUpdating = !!id
-  const product = products.find((product) => product.id === Number(id));
+   const { id: idString } = useLocalSearchParams();
+    const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+    const { data: product, error, isLoading } = useProduct(id);
 
   const router = useRouter();
   const addToCart = () => {
@@ -39,14 +40,17 @@ const ProductListItem = () => {
 
 
 
+if (isLoading) {
+    return <ActivityIndicator />;
+  }
+  if (error || !product) {
+    return <ThemedText>Failed to load product!</ThemedText>;
+  }
 
 
 
 
 
-if(!product) {
-  return <ThemedText>Product not found</ThemedText>;
-}
 
   return (
    

@@ -16,6 +16,7 @@ import React from "react";
 import CartProvider from "./providers/CartProvider";
 import AuthProvider from "./providers/AuthProvider";
 
+import QueryProvider from "./providers/QueryProvider";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -48,14 +49,16 @@ export default function RootLayout() {
     <>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <AuthProvider>
-        <CartProvider >
-        <Stack initialRouteName="(user)">
-        <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-          <Stack.Screen name="(user)" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />   
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        </CartProvider>
+          <QueryProvider>
+            <CartProvider>
+              <Stack initialRouteName="(user)">
+                <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+                <Stack.Screen name="(user)" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </CartProvider>
+          </QueryProvider>
         </AuthProvider>
         <StatusBar style="auto" />
       </ThemeProvider>
