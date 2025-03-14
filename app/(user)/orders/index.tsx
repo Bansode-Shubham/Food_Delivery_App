@@ -6,21 +6,20 @@ import OrderListItem from "@/components/OrderListItem";
 import { useMyOrderList } from "@/app/api/orders";
 
 export default function OrdersScreen() {
-    const { data: orders, isLoading, error } = useMyOrderList();
-    console.log(orders);
-    if (isLoading) {
-      return <ActivityIndicator />;
-    }
-    if (error) {
-      return <ThemedText>{error.message}</ThemedText>;
-    }
-    return (
-        <SafeAreaView>
-        <FlatList
-          data={orders}
-            renderItem={({ item }) => <OrderListItem orderItem={item} />}
-            
-        />
-        </SafeAreaView>
-    );
-    }
+  const { data: orders, isLoading, error } = useMyOrderList();
+  console.log(orders);
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+  if (error) {
+    return <ThemedText>{error.message}</ThemedText>;
+  }
+  return (
+    <SafeAreaView>
+      <FlatList
+        data={orders}
+        renderItem={({ item }) => <OrderListItem orderItem={item} />}
+      />
+    </SafeAreaView>
+  );
+}

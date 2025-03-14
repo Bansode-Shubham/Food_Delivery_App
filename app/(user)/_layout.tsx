@@ -28,10 +28,10 @@ import { useAuth } from "../providers/AuthProvider";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const navigation = useNavigation<any>();
-  const {session} = useAuth();
+  const { session } = useAuth();
 
-  if(!session){
-    return <Redirect href={'/sign-in'} />;
+  if (!session) {
+    return <Redirect href={"/sign-in"} />;
   }
 
   return (
@@ -48,7 +48,6 @@ export default function TabLayout() {
           },
           default: {},
         }),
-        
       }}
     >
       <Tabs.Screen
@@ -79,7 +78,7 @@ export default function TabLayout() {
           ),
         }}
       />
-   
+
       <Tabs.Screen
         name="orders"
         options={{
@@ -91,17 +90,15 @@ export default function TabLayout() {
         }}
       />
 
-<Tabs.Screen
+      <Tabs.Screen
         name="profile"
         options={{
-         
           title: "Profile",
           tabBarIcon: ({ color, size }) => (
             <Icon name="wallet" color={color} size={size} />
           ),
         }}
       />
-       </Tabs>
-      
+    </Tabs>
   );
 }

@@ -2,11 +2,63 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/superbase';
 
 
-export const useProductList = () => {
+// export const useProductList = () => {
+//   return useQuery({
+//     queryKey: ['products'],
+//     queryFn: async () => {
+//       const { data, error } = await supabase.from('products').select('*');
+//       if (error) {
+//         throw new Error(error.message);
+//       }
+//       return data;
+//     },
+//   });
+// };
+
+// export const useProductList = (restaurantId: number) => {
+//   return useQuery({
+//     queryKey: ['products', restaurantId],
+//     queryFn: async () => {
+//       const { data, error } = await supabase
+//         .from('products')
+//         .select('*')
+//         .eq('restaurant_id', restaurantId); // Filter by restaurant
+//       if (error) {
+//         throw new Error(error.message);
+//       }
+//       return data;
+//     },
+//   });
+// };
+
+
+// export const useProductList = (restaurantId: number) => {
+//   return useQuery({
+//     queryKey: ['products', restaurantId],
+//     queryFn: async () => {
+//       const { data, error } = await supabase
+//         .from('products')
+//         .select('*')
+//         .eq('restaurant_id', restaurantId); // Filter by restaurant
+//       if (error) {
+//         throw new Error(error.message);
+//       }
+//       return data;
+//     },
+//   });
+// };
+
+
+// 
+
+export const useProductList = (restaurantId: number) => {
   return useQuery({
-    queryKey: ['products'],
+    queryKey: ['products', restaurantId],
     queryFn: async () => {
-      const { data, error } = await supabase.from('products').select('*');
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('restaurant_id', restaurantId); // ✅ Filter by restaurant
       if (error) {
         throw new Error(error.message);
       }
@@ -14,8 +66,6 @@ export const useProductList = () => {
     },
   });
 };
-
-
 
 export const useProduct = (id: number) => {
     return useQuery({
@@ -33,6 +83,22 @@ export const useProduct = (id: number) => {
       },
     });
   };
+
+
+
+
+export const useRestaurants = () => {
+  return useQuery({
+    queryKey: ['restaurants'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('restaurants').select('*');
+      if (error) {
+        throw new Error(error.message);
+      }
+      return data;
+    },
+  });
+};
 
 
   export const useInsertProduct = () => {

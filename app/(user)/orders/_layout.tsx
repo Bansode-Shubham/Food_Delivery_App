@@ -5,9 +5,7 @@ import { Pressable } from "react-native";
 export default function OrdersStack() {
   const router = useRouter();
   return (
-    <Stack
-     
-    >
+    <Stack>
       <Stack.Screen name="index" options={{ title: "Order" }} />
     </Stack>
   );
