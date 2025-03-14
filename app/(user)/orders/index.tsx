@@ -1,10 +1,19 @@
 import { ThemedText } from "@/components/ThemedText";
-import { SafeAreaView } from "react-native";
-import orders from "@/assets/orders";
+import { ActivityIndicator, SafeAreaView } from "react-native";
+
 import { FlatList } from "react-native";
 import OrderListItem from "@/components/OrderListItem";
+import { useMyOrderList } from "@/app/api/orders";
 
 export default function OrdersScreen() {
+    const { data: orders, isLoading, error } = useMyOrderList();
+    console.log(orders);
+    if (isLoading) {
+      return <ActivityIndicator />;
+    }
+    if (error) {
+      return <ThemedText>{error.message}</ThemedText>;
+    }
     return (
         <SafeAreaView>
         <FlatList

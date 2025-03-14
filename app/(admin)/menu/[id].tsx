@@ -1,15 +1,22 @@
-import { View, Text, Image, StyleSheet,Pressable, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React from "react";
 import { ThemedText } from "@/components/ThemedText";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import products from "@/assets/products";
 import Button from "@/components/Button_react_paper";
-import {useCart} from "../../providers/CartProvider";
+import { useCart } from "../../providers/CartProvider";
 import { PizzaSize } from "@/assets/types";
 import { useProduct } from "@/app/api/product";
+import RemoteImage from "@/components/RemoteImage";
 
-
-const sizes:PizzaSize[] =['S','M','L','XL'];
+const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
 /**
  * ProductListItem is a React functional component that renders a product item
@@ -17,52 +24,41 @@ const sizes:PizzaSize[] =['S','M','L','XL'];
  * name, and price in a styled container.
  */
 
-
-
 const ProductListItem = () => {
-   const { id: idString } = useLocalSearchParams();
-    const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
-    const { data: product, error, isLoading } = useProduct(id);
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+  const { data: product, error, isLoading } = useProduct(id);
 
   const router = useRouter();
   const addToCart = () => {
-  
-    if(!product){
+    if (!product) {
       return;
-
-    }
-    else{
-     
-      router.push(`/create?id=${id}`); 
-
+    } else {
+      router.push(`/create?id=${id}`);
     }
   };
 
-
-
-if (isLoading) {
+  if (isLoading) {
     return <ActivityIndicator />;
   }
   if (error || !product) {
     return <ThemedText>Failed to load product!</ThemedText>;
   }
 
-
-
-
-
-
   return (
-   
     <View>
-    <Stack.Screen options={{ title: product.name }} />
-    <Image source={{uri:product.image}} style={styles.img} resizeMode="contain" />
-    <ThemedText style={styles.name}>{product.name} </ThemedText>
-    
-  
-    <ThemedText style={styles.price}>${product.price}</ThemedText>
-    <Button onPress={addToCart} text="Edit the product details" />
-  </View>
+      <Stack.Screen options={{ title: product.name }} />
+      <RemoteImage
+        path={product.image}
+        style={styles.img}
+        resizeMode="contain"
+        fallback=""
+      />
+      <ThemedText style={styles.name}>{product.name} </ThemedText>
+
+      <ThemedText style={styles.price}>${product.price}</ThemedText>
+      <Button onPress={addToCart} text="Edit the product details" />
+    </View>
   );
 };
 
@@ -71,7 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
     padding: 10,
     borderRadius: 10,
-   
+
     flex: 1,
   },
   sizes: {
@@ -79,22 +75,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 10,
     marginVertical: 10,
-
   },
-  size:{
+  size: {
     backgroundColor: "white",
     width: 50,
     aspectRatio: 1,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    
   },
-  sizeText:{
+  sizeText: {
     fontSize: 20,
     fontWeight: "bold",
-    color:"black",
-    
+    color: "black",
   },
   img: {
     width: "100%",
@@ -107,7 +100,6 @@ const styles = StyleSheet.create({
     lineHeight: 32,
   },
   price: {
-   
     fontSize: 20,
     fontWeight: "bold",
     marginTop: 50,

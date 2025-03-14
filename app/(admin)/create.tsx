@@ -8,10 +8,13 @@ const defaultPizzaImage =
 import { useCart } from "../providers/CartProvider";
 import CartListItem from "@/components/CartListItem";
 import React, { useEffect, useState } from "react";
+import * as FileSystem from "expo-file-system";
 import { TextInput } from "react-native-paper";
 import { router, useLocalSearchParams } from "expo-router";
 import { useDeleteProduct, useInsertProduct, useProduct, useUpdateProduct } from "../api/product";
-
+import { randomUUID } from "expo-crypto";
+import { supabase } from "@/lib/superbase";
+import { decode } from "base64-arraybuffer"
 const CreateproductScreen = () => {
   const [name, setName] = React.useState("");
   const [price, setPrice] = React.useState("");
@@ -73,13 +76,15 @@ const CreateproductScreen = () => {
     }
   };
 
-  const onUpdate = () => {
+  const onUpdate = async () => {
     if (!validateFields()) {
       return;
-    } else {
+    } 
+
+    const imagePath = await uploadImage()
       console.log("Product updated", { name, price });
       updateProduct(
-        { name, price: parseFloat(price), image, id },
+        { name, price: parseFloat(price), image:imagePath, id },
         {
           onSuccess: () => {
             resetFields();
@@ -89,7 +94,7 @@ const CreateproductScreen = () => {
           },
         }
       );
-    }
+    
   };
 
   const pickImage = async () => {
@@ -136,13 +141,13 @@ const CreateproductScreen = () => {
     return true;
   };
 
-  const onCreate = () => {
+  const onCreate = async () => {
     if (!validateFields()) {
       return;
-    } else {
-      console.log("Product created", { name, price });
+    } 
+      const imagePath = await uploadImage();
       insertProduct(
-        { name, price: parseFloat(price), image },
+        { name, price: parseFloat(price), image:imagePath },
         {
           onSuccess: () => {
             resetFields();
@@ -150,6 +155,25 @@ const CreateproductScreen = () => {
           },
         }
       );
+    
+  };
+
+  const uploadImage = async () => {
+    if (!image?.startsWith('file://')) {
+      return;
+    }
+  
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: 'base64',
+    });
+    const filePath = `${randomUUID()}.png`;
+    const contentType = 'image/png';
+    const { data, error } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, decode(base64), { contentType });
+  
+    if (data) {
+      return data.path;
     }
   };
 

@@ -8,7 +8,7 @@ import React from "react";
 
 
 const CartScreen = () => {
-  const { items ,total } = useCart();
+  const { items ,total, checkout } = useCart();
   return (
     <SafeAreaView>
    
@@ -19,7 +19,7 @@ const CartScreen = () => {
       contentContainerStyle={{padding:10, gap:10}}
        data={items} renderItem={({item}) => <CartListItem cartItem={item} />} />
       <ThemedText>Total: ${total.toFixed(2)}</ThemedText>
-      <Button onPress={() => console.log("Checkout")} text="Checkout" />
+      <Button onPress={checkout} text="Checkout" />
     </View>
     </SafeAreaView>
   );

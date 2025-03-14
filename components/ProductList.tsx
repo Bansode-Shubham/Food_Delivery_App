@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import products from "@/assets/products";
 import { Link, useSegments } from "expo-router";
+import RemoteImage from "./RemoteImage";
+
 
 interface Product {
   id: number;
@@ -16,10 +18,11 @@ const ProductListItem = ({ product }: { product: Product }) => {
     
     <Link href={`/menu/${product.id}`} asChild>
       <Pressable style={styles.Container}>
-        <Image
-          source={{ uri: product.image }}
+        <RemoteImage
+          path={product.image}
           style={styles.img}
           resizeMode="contain"
+          fallback=""
         />
         <Text style={styles.title}>{product.name}</Text>
         <Text style={styles.price}>${product.price}</Text>

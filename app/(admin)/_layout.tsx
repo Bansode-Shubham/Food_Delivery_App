@@ -48,7 +48,6 @@ export default function TabLayout() {
           },
           default: {},
         }),
-        
       }}
     >
       <Tabs.Screen
@@ -80,9 +79,6 @@ export default function TabLayout() {
         }}
       />
 
-      
-      
-   
       <Tabs.Screen
         name="orders"
         options={{
@@ -93,7 +89,8 @@ export default function TabLayout() {
           ),
         }}
       />
-       </Tabs>
+
       
+    </Tabs>
   );
 }

@@ -40,20 +40,27 @@
 
 
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { ThemedText } from '../../../components/ThemedText';
 import OrderListItem from '../../../components/OrderListItem';
 import OrderItemListItem from '../../../components/OrderItemListItem';
-import orders from '../../../assets/orders'; // Adjust the import path as needed
+// Adjust the import path as needed
+import { useOrderDetails } from '@/app/api/orders';
+import { useUpdateOrderSubscription } from '@/app/api/orders/subscriptions';
 
 const OrderDetailScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { id:idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === 'string' ? idString : idString[0]);
 
-  const order = orders.find((o) => o.id.toString() === id);
-
-  if (!order) {
-    return <ThemedText>Order not found!</ThemedText>;
+  useUpdateOrderSubscription(id);
+  
+  const{data:order,isLoading,error} = useOrderDetails(id);
+  if(isLoading){
+    return <ActivityIndicator />;
+  }
+  if(error){
+    return <ThemedText>{error.message}</ThemedText>;
   }
 
   return (

@@ -1,22 +1,30 @@
 import React from "react";
-import { View, FlatList, StyleSheet, Pressable } from "react-native";
+import { View, FlatList, StyleSheet, Pressable, ActivityIndicator } from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { ThemedText } from "../../../components/ThemedText";
 import OrderListItem from "../../../components/OrderListItem";
 import OrderItemListItem from "../../../components/OrderItemListItem";
 import orders from "../../../assets/orders"; // Adjust the import path as needed
-import { OrderStatusList } from "@/assets/types";
+import { OrderStatus, OrderStatusList } from "@/assets/types";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import { useOrderDetails, useUpdateOrder } from "@/app/api/orders";
 
 const OrderDetailScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { id:idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === 'string' ? idString : idString[0]);
 
-  const order = orders.find((o) => o.id.toString() === id);
-
-  if (!order) {
-    return <ThemedText>Order not found!</ThemedText>;
+  const { mutate: updateOrder } = useUpdateOrder();
+  const{data:order,isLoading,error} = useOrderDetails(id);
+  if(isLoading){
+    return <ActivityIndicator />;
+  }
+  if(error){
+    return <ThemedText>{error.message}</ThemedText>;
   }
 
+  const updateStatus = async (status: OrderStatus) => {
+    updateOrder({ id, status: status });
+  };
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: `Order #${order.id}` }} />
@@ -34,16 +42,16 @@ const OrderDetailScreen = () => {
               {OrderStatusList.map((status) => (
                 <Pressable
                   key={status}
-                  onPress={() => console.warn("Update status")}
+                  onPress={() => updateStatus(status)}
                   style={{
-                    borderColor: Colors.light.tint,
+                    borderColor: "white",
                     borderWidth: 1,
                     padding: 10,
                     borderRadius: 5,
                     marginVertical: 10,
                     backgroundColor:
                       order.status === status
-                        ? Colors.light.tint
+                        ? "green"
                         : "transparent",
                   }}
                 >
@@ -53,7 +61,7 @@ const OrderDetailScreen = () => {
                         order.status === status ? "white" : Colors.light.tint,
                     }}
                   >
-                    {status}
+                   <ThemedText>{status}</ThemedText> 
                   </ThemedText>
                 </Pressable>
               ))}

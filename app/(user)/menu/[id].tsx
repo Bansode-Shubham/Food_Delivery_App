@@ -14,6 +14,7 @@ import Button from "@/components/Button_react_paper";
 import { useCart } from "../../providers/CartProvider";
 import { PizzaSize } from "@/assets/types";
 import { useProduct } from "@/app/api/product";
+import RemoteImage from "@/components/RemoteImage";
 
 const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
 
@@ -51,10 +52,11 @@ const ProductListItem = () => {
   return (
     <View>
       <Stack.Screen options={{ title: product.name }} />
-      <Image
-        source={{ uri: product.image }}
+      <RemoteImage
+      path={ product.image}
         style={styles.img}
         resizeMode="contain"
+        fallback=""
       />
       <ThemedText style={styles.name}>{product.name} </ThemedText>
       <ThemedText>Select Size </ThemedText>

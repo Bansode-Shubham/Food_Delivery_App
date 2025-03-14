@@ -2,12 +2,18 @@ import { CartItem, Product } from "@/assets/types";
 import { createContext, useContext } from "react";
 import { PropsWithChildren, useState } from "react";
 import { randomUUID } from "expo-crypto";
+import { useInsertOrder } from "../api/orders";
+import { router } from "expo-router";
+import { useInsertOrderItems } from "../api/order-items";
+
+
 
 type CartType = {
   items: CartItem[];
   addItem: (product: Product, size: CartItem["size"]) => void;
   updateQuantity: (id: string, quantity: -1 | 1) => void;
   total: number;
+  checkout: () => void;
 };
 
 export const CartContext = createContext<CartType>({
@@ -15,10 +21,15 @@ export const CartContext = createContext<CartType>({
   addItem: () => {},
   updateQuantity: () => {},
   total: 0,
+  checkout: () => {},
 });
 
 const CartProvider = ({ children }: PropsWithChildren) => {
   const [items, setitems] = useState<CartItem[]>([]);
+
+  const {mutate : insert} = useInsertOrder();
+  const {mutate : insertOrderItems} = useInsertOrderItems();
+  
 
   const addItem = (product: Product, size: CartItem["size"]) => {
     const existingItem = items.find(
@@ -57,8 +68,34 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     0
   );
 
+  const clearcart = () => {
+    setitems([]);
+  };
+
+const saveOrderItems = (newOrder: any) => {
+ if (!newOrder) return;
+
+  insertOrderItems({
+    items,
+    order_id: newOrder.id,
+  }, {
+    onSuccess() {
+      setitems([]);
+      router.push(`/(user)/orders/${newOrder.id}`);
+    },})
+
+
+   
+  };
+
+  const checkout = () => {
+    insert({ total }, {
+      onSuccess: saveOrderItems
+    });
+  };
+
   return (
-    <CartContext.Provider value={{ items, addItem, updateQuantity, total }}>
+    <CartContext.Provider value={{ items, addItem, updateQuantity, total, checkout }}>
       {children}
     </CartContext.Provider>
   );
