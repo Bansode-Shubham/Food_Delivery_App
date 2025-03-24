@@ -126,38 +126,33 @@
 
 // export default ProductListItem;
 
-
 import { View, StyleSheet, Pressable, ActivityIndicator } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import Button from "@/components/Button_react_paper";
 import { useCart } from "../../../providers/CartProvider";
-import { PizzaSize } from "@/assets/types";
 import { useProduct } from "@/app/api/product";
 import RemoteImage from "@/components/RemoteImage";
 import React from "react";
 
-const sizes: PizzaSize[] = ["S", "M", "L", "XL"];
-
 const ProductDetailsScreen = () => {
   const { addItem } = useCart();
   const router = useRouter();
-  const [selectedSize, setSelectedSize] = React.useState<PizzaSize>("M");
 
   const { product: idString } = useLocalSearchParams();
   const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
   const { data: product, error, isLoading } = useProduct(id);
 
   const addToCart = () => {
-    console.log(`Added to cart and selected size ${selectedSize}`);
     if (!product) return;
 
-    addItem(product, selectedSize);
+    addItem(product);
     router.push("/cart");
   };
 
   if (isLoading) return <ActivityIndicator />;
-  if (error || !product) return <ThemedText>Failed to load product!</ThemedText>;
+  if (error || !product)
+    return <ThemedText>Failed to load product!</ThemedText>;
 
   return (
     <View>
@@ -169,28 +164,6 @@ const ProductDetailsScreen = () => {
         fallback=""
       />
       <ThemedText style={styles.name}>{product.name} </ThemedText>
-      <ThemedText>Select Size </ThemedText>
-      <View style={styles.sizes}>
-        {sizes.map((size) => (
-          <Pressable
-            onPress={() => setSelectedSize(size)}
-            key={size}
-            style={[
-              styles.size,
-              { backgroundColor: selectedSize === size ? "white" : "black" },
-            ]}
-          >
-            <ThemedText
-              style={[
-                styles.sizeText,
-                { color: selectedSize === size ? "black" : "white" },
-              ]}
-            >
-              {size}
-            </ThemedText>
-          </Pressable>
-        ))}
-      </View>
       <ThemedText style={styles.price}>${product.price}</ThemedText>
       <Button onPress={addToCart} text="Add to cart" />
     </View>

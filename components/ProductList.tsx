@@ -56,7 +56,6 @@
 //   },
 // });
 
-
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { Link, useSegments } from "expo-router"; // ✅ Correct Route Handling
 import RemoteImage from "./RemoteImage";
@@ -71,7 +70,6 @@ interface Product {
 const ProductListItem = ({ product }: { product: Product }) => {
   const segments = useSegments();
   const restaurantId = segments[2]; // ✅ Extract Restaurant ID from URL Path
-  console.log("Restaurant ID in Segment:", restaurantId); // 🟠 Debug Log
 
   return (
     <Link href={`/menu/${restaurantId}/${product.id}`} asChild>

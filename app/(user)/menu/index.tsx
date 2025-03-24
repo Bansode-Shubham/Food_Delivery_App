@@ -1,4 +1,3 @@
-
 // import { FlatList } from "react-native";
 
 // import { ThemedText } from "@/components/ThemedText";
@@ -41,7 +40,6 @@
 //     </>
 //   );
 // }
-
 
 // import React from "react";
 // import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
@@ -98,7 +96,6 @@
 //     fontSize: 16,
 //   },
 // });
-
 
 // import React from "react";
 // import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
@@ -157,7 +154,6 @@
 //   },
 // });
 
-
 // import { FlatList, Pressable, Text, View } from "react-native";
 // import { useRouter } from "expo-router";
 // import { useQuery } from "@tanstack/react-query";
@@ -202,8 +198,7 @@
 //   );
 // }
 
-
-import { FlatList, Pressable, Text, View } from "react-native";
+import { FlatList, Pressable, Text } from "react-native";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/superbase";
@@ -211,11 +206,15 @@ import { supabase } from "@/lib/superbase";
 export default function RestaurantScreen() {
   const router = useRouter();
 
-  const { data: restaurants, error, isLoading } = useQuery({
-    queryKey: ['restaurants'],
+  const {
+    data: restaurants,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["restaurants"],
     queryFn: async () => {
-      const { data, error } = await supabase.from('restaurants').select('*');
-      
+      const { data, error } = await supabase.from("restaurants").select("*");
+
       if (error) {
         throw new Error(error.message);
       }
@@ -232,15 +231,11 @@ export default function RestaurantScreen() {
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <Pressable
-        
-          // onPress={() => router.push(`/menu/${item.id}`)} // ✅ Navigate to MenuScreen
           onPress={() => {
-            console.log("Navigating to Restaurant ID:", item.id); // 🟠 Debug Log
             router.push(`/menu/${item.id}`);
           }}
-          
           style={{
-            backgroundColor: '#f5f5f5',
+            backgroundColor: "#f5f5f5",
             padding: 10,
             marginVertical: 5,
             borderRadius: 8,

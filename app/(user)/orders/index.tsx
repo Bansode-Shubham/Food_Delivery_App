@@ -7,7 +7,6 @@ import { useMyOrderList } from "@/app/api/orders";
 
 export default function OrdersScreen() {
   const { data: orders, isLoading, error } = useMyOrderList();
-  console.log(orders);
   if (isLoading) {
     return <ActivityIndicator />;
   }

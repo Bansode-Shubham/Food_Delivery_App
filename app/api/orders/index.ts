@@ -21,9 +21,6 @@ export const useAdminOrderList = ({archived = false}) => {
     });
 }
 
-
-
-
 export const useMyOrderList = () => {
     const {session} =useAuth();
     const userId = session?.user.id;

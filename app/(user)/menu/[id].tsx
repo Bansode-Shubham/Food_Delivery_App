@@ -126,9 +126,6 @@
 
 // export default ProductListItem;
 
-
-
-
 // import { FlatList } from "react-native";
 
 // import { ThemedText } from "@/components/ThemedText";
@@ -172,7 +169,6 @@
 //   );
 // }
 
-
 // import { FlatList } from "react-native";
 // import { ThemedText } from "@/components/ThemedText";
 // import React from "react";
@@ -207,7 +203,6 @@
 //   );
 // }
 
-
 // import { FlatList } from "react-native";
 // import { useLocalSearchParams } from "expo-router"; // ✅ Use this for params
 // import { ThemedText } from "@/components/ThemedText";
@@ -234,7 +229,6 @@
 //     </>
 //   );
 // }
-
 
 // import { FlatList } from "react-native";
 // import { useLocalSearchParams } from "expo-router"; // ✅ Updated for dynamic param
@@ -265,7 +259,6 @@
 //   );
 // }
 
-
 import { FlatList } from "react-native";
 import { useLocalSearchParams } from "expo-router"; // ✅ Correctly Extract Restaurant ID
 import { ThemedText } from "@/components/ThemedText";
@@ -275,10 +268,12 @@ import { ActivityIndicator } from "react-native-paper";
 
 export default function MenuScreen() {
   const { id: restaurantId } = useLocalSearchParams(); // ✅ Extract Restaurant ID
- 
 
-  const { data: products, error, isLoading } = useProductList(Number(restaurantId));
-
+  const {
+    data: products,
+    error,
+    isLoading,
+  } = useProductList(Number(restaurantId));
 
   if (isLoading) return <ActivityIndicator />;
   if (error) return <ThemedText>{error.message}</ThemedText>;
