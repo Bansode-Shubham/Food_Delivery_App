@@ -7,14 +7,13 @@ import { ThemedText } from "@/components/ThemedText";
 
 import { useInsertOrderSubscription } from "@/app/api/orders/subscriptions";
 
-
 export default function OrdersScreen() {
   const {
     data: orders,
     isLoading,
     error,
   } = useAdminOrderList({ archived: false });
- 
+
   useInsertOrderSubscription();
 
   if (isLoading) {

@@ -11,27 +11,32 @@ import React, { useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import { TextInput } from "react-native-paper";
 import { router, useLocalSearchParams } from "expo-router";
-import { useDeleteProduct, useInsertProduct, useProduct, useUpdateProduct } from "../api/product";
+import {
+  useDeleteProduct,
+  useInsertProduct,
+  useProduct,
+  useUpdateProduct,
+} from "../api/product";
 import { randomUUID } from "expo-crypto";
 import { supabase } from "@/lib/superbase";
-import { decode } from "base64-arraybuffer"
+import { decode } from "base64-arraybuffer";
 const CreateproductScreen = () => {
   const [name, setName] = React.useState("");
   const [price, setPrice] = React.useState("");
   const [Error, setError] = React.useState("");
   const [image, setImage] = useState<string | null>(null);
   const { id: idString } = useLocalSearchParams();
-  
-  const id = parseFloat(typeof idString === "string" ? idString : idString?.[0]);
 
-  const  updating = !!id;
+  const id = parseFloat(
+    typeof idString === "string" ? idString : idString?.[0]
+  );
 
+  const updating = !!id;
 
   const { mutate: insertProduct } = useInsertProduct();
   const { mutate: updateProduct } = useUpdateProduct();
   const { data: updatingProduct } = useProduct(id);
   const { mutate: deleteProduct } = useDeleteProduct();
-
 
   useEffect(() => {
     if (updatingProduct) {
@@ -55,8 +60,6 @@ const CreateproductScreen = () => {
     );
 
     console.log("Product deleted");
-    
-    
   };
 
   const onDelete = () => {
@@ -79,22 +82,19 @@ const CreateproductScreen = () => {
   const onUpdate = async () => {
     if (!validateFields()) {
       return;
-    } 
+    }
 
-    const imagePath = await uploadImage()
-      console.log("Product updated", { name, price });
-      updateProduct(
-        { name, price: parseFloat(price), image:imagePath, id },
-        {
-          onSuccess: () => {
-            resetFields();
-            router.back();
-          
-            
-          },
-        }
-      );
-    
+    const imagePath = await uploadImage();
+    console.log("Product updated", { name, price });
+    updateProduct(
+      { name, price: parseFloat(price), image: imagePath, id },
+      {
+        onSuccess: () => {
+          resetFields();
+          router.back();
+        },
+      }
+    );
   };
 
   const pickImage = async () => {
@@ -144,34 +144,33 @@ const CreateproductScreen = () => {
   const onCreate = async () => {
     if (!validateFields()) {
       return;
-    } 
-      const imagePath = await uploadImage();
-      insertProduct(
-        { name, price: parseFloat(price), image:imagePath },
-        {
-          onSuccess: () => {
-            resetFields();
-            router.back();
-          },
-        }
-      );
-    
+    }
+    const imagePath = await uploadImage();
+    insertProduct(
+      { name, price: parseFloat(price), image: imagePath },
+      {
+        onSuccess: () => {
+          resetFields();
+          router.back();
+        },
+      }
+    );
   };
 
   const uploadImage = async () => {
-    if (!image?.startsWith('file://')) {
+    if (!image?.startsWith("file://")) {
       return;
     }
-  
+
     const base64 = await FileSystem.readAsStringAsync(image, {
-      encoding: 'base64',
+      encoding: "base64",
     });
     const filePath = `${randomUUID()}.png`;
-    const contentType = 'image/png';
+    const contentType = "image/png";
     const { data, error } = await supabase.storage
-      .from('product-images')
+      .from("product-images")
       .upload(filePath, decode(base64), { contentType });
-  
+
     if (data) {
       return data.path;
     }

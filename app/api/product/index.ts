@@ -67,6 +67,9 @@ export const useProductList = (restaurantId: number) => {
   });
 };
 
+
+
+
 export const useProduct = (id: number) => {
     return useQuery({
       queryKey: ['product', id],
@@ -86,7 +89,7 @@ export const useProduct = (id: number) => {
 
 
 
-
+   
 export const useRestaurants = () => {
   return useQuery({
     queryKey: ['restaurants'],

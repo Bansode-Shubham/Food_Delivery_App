@@ -1,11 +1,6 @@
-import {
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
+import { FlatList, ActivityIndicator } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
-
-
 
 import React from "react";
 
@@ -15,11 +10,12 @@ import ProductListItem from "@/components/ProductList";
 import { useProductList } from "@/app/api/product";
 
 export default function MenuScreen() {
-  const {data: products,error,isLoading} = useProductList();
-  if(isLoading){
+  
+  const { data: products, error, isLoading } = useProductList(1);
+  if (isLoading) {
     return <ActivityIndicator />;
   }
-  if(error){
+  if (error) {
     return <ThemedText>{error.message}</ThemedText>;
   }
   return (

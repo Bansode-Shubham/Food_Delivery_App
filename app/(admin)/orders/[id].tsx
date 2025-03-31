@@ -1,5 +1,11 @@
 import React from "react";
-import { View, FlatList, StyleSheet, Pressable, ActivityIndicator } from "react-native";
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { ThemedText } from "../../../components/ThemedText";
 import OrderListItem from "../../../components/OrderListItem";
@@ -10,15 +16,15 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import { useOrderDetails, useUpdateOrder } from "@/app/api/orders";
 
 const OrderDetailScreen = () => {
-  const { id:idString } = useLocalSearchParams();
-  const id = parseFloat(typeof idString === 'string' ? idString : idString[0]);
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
 
   const { mutate: updateOrder } = useUpdateOrder();
-  const{data:order,isLoading,error} = useOrderDetails(id);
-  if(isLoading){
+  const { data: order, isLoading, error } = useOrderDetails(id);
+  if (isLoading) {
     return <ActivityIndicator />;
   }
-  if(error){
+  if (error) {
     return <ThemedText>{error.message}</ThemedText>;
   }
 
@@ -50,9 +56,7 @@ const OrderDetailScreen = () => {
                     borderRadius: 5,
                     marginVertical: 10,
                     backgroundColor:
-                      order.status === status
-                        ? "green"
-                        : "transparent",
+                      order.status === status ? "green" : "transparent",
                   }}
                 >
                   <ThemedText
@@ -61,7 +65,7 @@ const OrderDetailScreen = () => {
                         order.status === status ? "white" : Colors.light.tint,
                     }}
                   >
-                   <ThemedText>{status}</ThemedText> 
+                    <ThemedText>{status}</ThemedText>
                   </ThemedText>
                 </Pressable>
               ))}
