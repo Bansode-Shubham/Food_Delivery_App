@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/superbase';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 
 // export const useProductList = () => {
@@ -67,6 +68,31 @@ export const useProductList = (restaurantId: number) => {
   });
 };
 
+
+// Fetch restaurant owned by the logged-in user
+export const useRestaurantByOwner = () => {
+  const { profile, loading: authLoading } = useAuth(); // Use your existing auth context
+  
+  return useQuery({
+    queryKey: ['restaurant', profile?.id],
+    queryFn: async () => {
+      if (!profile?.id) throw new Error('User not authenticated');
+      
+      const { data, error } = await supabase
+        .from('restaurants')
+        .select('*')
+        .eq('user_id', profile.id)
+        .single(); // Assuming one restaurant per owner
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      return data;
+    },
+    enabled: !!profile?.id && !authLoading, // Only run when profile is loaded and not loading
+  });
+};
 
 
 
