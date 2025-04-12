@@ -1,94 +1,4 @@
-// import { supabase } from "@/lib/superbase";
-// import { Session } from "@supabase/supabase-js";
-// import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 
-// type AuthData = {
-//   session: Session | null;
-// };
-
-// const [session, setSession] = useState<Session | null>(null);
-// const AuthContext = createContext<AuthData>({
-//   session: null,
-// });
-
-// export default function AuthProvider({ children }: PropsWithChildren) {
-//   useEffect(() => {
-//     const fetchSession = async () => {
-//       const { data } = await supabase.auth.getSession();
-//       setSession(data.session);
-//     };
-//     fetchSession();
-//   }, []);
-//   return (
-//     <AuthContext.Provider value={{ session }}>{children}</AuthContext.Provider>
-//   );
-// }
-
-// export const useAuth = () => useContext(AuthContext);
-
-// import { supabase } from "@/lib/superbase";
-// import { Session } from "@supabase/supabase-js";
-// import {
-//   createContext,
-//   PropsWithChildren,
-//   useContext,
-//   useEffect,
-//   useState,
-// } from "react";
-
-// type AuthData = {
-//   session: Session | null;
-//   profile: any;
-//   loading: boolean;
-//   isAdmin: boolean;
-// };
-// const AuthContext = createContext<AuthData>({
-//   session: null,
-//   profile: null,
-//   loading: true,
-//   isAdmin: false,
-// });
-
-// export default function AuthProvider({ children }: PropsWithChildren) {
-//   const [session, setSession] = useState<Session | null>(null);
-//   const [profile, setProfile] = useState<any>(null);
-//   const [loading, setLoading] = useState(true);
-//   const isAdmin = false; // Initialize isAdmin
-
-//   useEffect(() => {
-//     const fetchSession = async () => {
-//       const {
-//         data: { session },
-//       } = await supabase.auth.getSession();
-//       setSession(session);
-
-//       if (session) {
-//         // fetch profile
-//         const { data } = await supabase
-//           .from("profiles")
-//           .select("*")
-//           .eq("id", session.user.id)
-//           .single();
-//         setProfile(data || null);
-//       }
-//       setLoading(false);
-//     };
-//     fetchSession();
-//     supabase.auth.onAuthStateChange((_event, session) => {
-//       setSession(session);
-//     });
-//   }, []);
-
-//   console.log(profile);
-
-//   return (
-//     <AuthContext.Provider value={{ session, loading, profile, isAdmin }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// }
-
-// export const useAuth = () => useContext(AuthContext);
 
 
 import { supabase } from "@/lib/superbase";
@@ -109,6 +19,25 @@ const AuthContext = createContext<AuthData>({
     isAdmin: false,
 });
 
+/**
+ * Provider component that manages authentication state and user profile data.
+ * 
+ * This component handles:
+ * - Authentication session state
+ * - User profile data fetching and management
+ * - Admin status tracking
+ * - Authentication state changes
+ * 
+ * @param {PropsWithChildren} props - Component props containing child elements
+ * @returns {JSX.Element} AuthContext.Provider wrapping child components
+ * 
+ * @example
+ * ```tsx
+ * <AuthProvider>
+ *   <App />
+ * </AuthProvider>
+ * ```
+ */
 export default function AuthProvider({ children }: PropsWithChildren) {
     const [session, setSession] = useState<Session | null>(null);
     const [profile, setProfile] = useState<any>(null);

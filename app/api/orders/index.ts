@@ -115,33 +115,3 @@ export const useUpdateOrder = () => {
   };
 
 
-
-//   export const useInsertOrder = () => {
-//     const queryClient = useQueryClient();
-//     const { user } = useAuth();
-  
-//     return useMutation({
-//       async mutationFn({ total }: any) {
-//         if (!user) return null;
-  
-//         const { error, data } = await supabase
-//           .from('orders')
-//           .insert({
-//             total,
-//             user_id: user.id,
-//           })
-//           .select();
-  
-//         if (error) {
-//           throw error;
-//         }
-//         return data[0];
-//       },
-//       async onSuccess() {
-//         await queryClient.invalidateQueries(['orders']);
-//       },
-//       onError(error) {
-//         console.log(error);
-//       },
-//     });
-//   };

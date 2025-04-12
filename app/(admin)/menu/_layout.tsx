@@ -5,11 +5,8 @@ import { Pressable } from "react-native";
 export default function MenuStack() {
   const router = useRouter();
   return (
-    <Stack
-     
-    >
+    <Stack>
       <Stack.Screen name="index" options={{ title: "Menu" }} />
-      
     </Stack>
   );
 }

@@ -40,7 +40,7 @@ import { FlatList, ActivityIndicator, View } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import ProductListItem from "@/components/ProductList";
+import AdminProductListItem from "@/components/AdminProductList";
 import { useProductList } from "@/app/api/product";
 import { useRestaurantByOwner } from "@/app/api/product"; // Import the new hook
 
@@ -103,7 +103,7 @@ export default function MenuScreen() {
       </View>
       <FlatList
         data={products}
-        renderItem={({ item }) => <ProductListItem product={item} />}
+        renderItem={({ item }) => <AdminProductListItem product={item} />}
         numColumns={2}
         contentContainerStyle={{ gap: 10, padding: 10 }}
         columnWrapperStyle={{ gap: 10 }}
