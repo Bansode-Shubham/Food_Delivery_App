@@ -6,6 +6,7 @@ import { useInsertOrder } from "../api/orders";
 import { useRouter } from "expo-router";
 import { useInsertOrderItems } from "../api/order-items";
 
+
 type CartType = {
   items: CartItem[];
   addItem: (product: Product) => void;
@@ -22,11 +23,40 @@ export const CartContext = createContext<CartType>({
   checkout: () => {},
 });
 
+/**
+ * CartProvider component that manages the shopping cart state and operations.
+ * 
+ * @component
+ * @param {PropsWithChildren} props - The component props containing children elements
+ * 
+ * @returns {JSX.Element} CartContext.Provider wrapping the children components
+ * 
+ * @remarks
+ * This provider component includes the following cart management functions:
+ * - addItem: Adds a product to the cart or increments its quantity if already exists
+ * - updateQuantity: Updates the quantity of a specific item in the cart
+ * - total: Calculates the total price of all items in the cart
+ * - clearcart: Removes all items from the cart
+ * - saveOrderItems: Saves order items to the database after order creation
+ * - checkout: Processes the checkout by creating an order and saving order items
+ * 
+ * The cart state is managed using React's useState hook and includes:
+ * - items: Array of CartItem objects
+ * - total: Calculated total price of all items
+ * 
+ * @example
+ * ```tsx
+ * <CartProvider>
+ *   <App />
+ * </CartProvider>
+ * ```
+ */
 const CartProvider = ({ children }: PropsWithChildren) => {
   const [items, setitems] = useState<CartItem[]>([]);
   const router = useRouter();
   const { mutate: insert } = useInsertOrder();
   const { mutate: insertOrderItems } = useInsertOrderItems();
+  
 
   const addItem = (product: Product) => {
     const existingItem = items.find((item) => item.product_id === product.id);
@@ -85,8 +115,10 @@ const CartProvider = ({ children }: PropsWithChildren) => {
   };
 
   const checkout = () => {
+    if (items.length === 0) return;
+    const restaurant_id = items[0].product.restaurant_id;
     insert(
-      { total },
+      { total, restaurant_id },
       {
         onSuccess: saveOrderItems,
       }

@@ -3,6 +3,24 @@ import { CartItem } from "@/assets/types";
 import { supabase } from "@/lib/superbase";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+/**
+ * Custom hook that creates a mutation for inserting order items into the database
+ * 
+ * @returns A mutation object for inserting order items
+ * 
+ * @example
+ * const insertOrderItems = useInsertOrderItems();
+ * insertOrderItems.mutate({
+ *   items: cartItems,
+ *   order_id: orderId
+ * });
+ * 
+ * @remarks
+ * This hook uses Supabase to insert multiple order items in a single transaction.
+ * Each item is mapped to include quantity, order_id, and product_id.
+ * 
+ * @throws Will throw an error if the Supabase insertion fails
+ */
 export const useInsertOrderItems = () => {
   return useMutation({
     async mutationFn({
@@ -30,25 +48,3 @@ export const useInsertOrderItems = () => {
   });
 };
 
-// export const useInsertOrderItems = () => {
-//     const queryClient = useQueryClient();
-
-//     return useMutation({
-//         async mutationFn(data: any) {
-//             const { error, data: newOrder } = await supabase
-//             .from('orders_items')
-//             .insert({
-//                ...data,
-//             })
-//             .select()
-//             .single();
-//             if (error) {
-//                 throw new Error(error.message);
-//             }
-//             return newOrder;
-//         },
-//         async onSuccess() {
-//             await queryClient.invalidateQueries({ queryKey: ['orders'] });
-//         },
-//     });
-// };
