@@ -18,7 +18,7 @@ const CartScreen = () => {
       <FlatList 
       contentContainerStyle={{padding:10, gap:10}}
        data={items} renderItem={({item}) => <CartListItem cartItem={item} />} />
-      <ThemedText>Total: ${total.toFixed(2)}</ThemedText>
+      <ThemedText>Total: Rs{total.toFixed(2)}</ThemedText>
       <Button onPress={checkout} text="Checkout" />
     </View>
     </SafeAreaView>

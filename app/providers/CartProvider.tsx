@@ -92,9 +92,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     0
   );
 
-  const clearcart = () => {
-    setitems([]);
-  };
+ 
 
   const saveOrderItems = (newOrder: any) => {
     if (!newOrder) return;

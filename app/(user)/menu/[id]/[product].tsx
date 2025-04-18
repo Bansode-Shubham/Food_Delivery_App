@@ -41,7 +41,7 @@ const ProductDetailsScreen = () => {
         fallback=""
       />
       <ThemedText style={styles.name}>{product.name} </ThemedText>
-      <ThemedText style={styles.price}>${product.price}</ThemedText>
+      <ThemedText style={styles.price}>Rs{product.price}</ThemedText>
       <Button onPress={addToCart} text="Add to cart" />
     </View>
   );

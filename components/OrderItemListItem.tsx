@@ -22,7 +22,7 @@ const OrderItemListItem = ({ item }: OrderItemListItemProps) => {
       <View style={{ flex: 1 }}>
         <Text style={styles.title}>{item.products.name}</Text>
         <View style={styles.subtitleContainer}>
-          <Text style={styles.price}>${item.products.price.toFixed(2)}</Text>
+          <Text style={styles.price}>Rs{item.products.price.toFixed(2)}</Text>
         </View>
       </View>
       <View style={styles.quantitySelector}>

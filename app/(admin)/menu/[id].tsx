@@ -56,7 +56,7 @@ const ProductListItem = () => {
       />
       <ThemedText style={styles.name}>{product.name} </ThemedText>
 
-      <ThemedText style={styles.price}>${product.price}</ThemedText>
+      <ThemedText style={styles.price}>Rs{product.price}</ThemedText>
       <Button onPress={addToCart} text="Edit the product details" />
     </View>
   );
