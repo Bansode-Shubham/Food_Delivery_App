@@ -127,37 +127,80 @@ export const useOrderDetails = (id: number) => {
  * const { mutate } = useInsertOrder();
  * mutate({ total: 100 });
  */
-interface OrderData {
+// after:
+export interface OrderData {
   total: number;
   restaurant_id: number;
+  address?: string;    // <-- new optional field
 }
+
+// export const useInsertOrder = () => {
+//   const queryClient = useQueryClient();
+//   const { session } = useAuth();
+//   const userId = session?.user.id;
+
+//   return useMutation({
+//     async mutationFn(data: OrderData) {
+//       const { error, data: newOrder } = await supabase
+//         .from("orders")
+//         .insert({
+//           total: data.total,
+//           user_id: userId,
+//           restaurant_id: data.restaurant_id,
+//         })
+//         .select()
+//         .single();
+//       if (error) {
+//         throw new Error(error.message);
+//       }
+//       return newOrder;
+//     },
+//     async onSuccess() {
+//       await queryClient.invalidateQueries({ queryKey: ["orders"] });
+//     },
+//   });
+// };
 
 export const useInsertOrder = () => {
   const queryClient = useQueryClient();
   const { session } = useAuth();
   const userId = session?.user.id;
 
+  console.log('Initializing useInsertOrder with userId:', userId);
+
   return useMutation({
     async mutationFn(data: OrderData) {
+      console.log('Starting mutation with data:', data);
+
       const { error, data: newOrder } = await supabase
         .from("orders")
         .insert({
           total: data.total,
           user_id: userId,
           restaurant_id: data.restaurant_id,
+          address: data.address,
         })
         .select()
         .single();
+
+      console.log('Supabase response:', { error, newOrder });
+
       if (error) {
+        console.error('Error inserting order:', error);
         throw new Error(error.message);
       }
+      
+      console.log('Successfully created order:', newOrder);
       return newOrder;
     },
-    async onSuccess() {
+    async onSuccess(data) {
+      console.log('Order creation successful, invalidating queries');
       await queryClient.invalidateQueries({ queryKey: ["orders"] });
+      console.log('Queries invalidated');
     },
   });
 };
+
 
 /**
  * Custom hook for updating an order's status in the database.

@@ -84,7 +84,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   price: {
-    // color: Colors.light.tint,
     fontWeight: 'bold',
   },
 });

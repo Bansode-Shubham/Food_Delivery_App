@@ -7,12 +7,13 @@ import { useRouter } from "expo-router";
 import { useInsertOrderItems } from "../api/order-items";
 
 
+// after
 type CartType = {
   items: CartItem[];
   addItem: (product: Product) => void;
   updateQuantity: (id: string, quantity: -1 | 1) => void;
   total: number;
-  checkout: () => void;
+  checkout: (address?: string) => void;    // <-- allow an optional address
 };
 
 export const CartContext = createContext<CartType>({
@@ -20,7 +21,7 @@ export const CartContext = createContext<CartType>({
   addItem: () => {},
   updateQuantity: () => {},
   total: 0,
-  checkout: () => {},
+  checkout: (_address?: string) => {},   // <-- accept an optional param
 });
 
 /**
@@ -57,33 +58,37 @@ const CartProvider = ({ children }: PropsWithChildren) => {
   const { mutate: insert } = useInsertOrder();
   const { mutate: insertOrderItems } = useInsertOrderItems();
   
-
   const addItem = (product: Product) => {
+    console.log('Adding item to cart:', product);
     const existingItem = items.find((item) => item.product_id === product.id);
     if (existingItem) {
+      console.log('Item already exists, updating quantity');
       updateQuantity(existingItem.id, 1);
       return;
     }
 
-    console.log(product);
     const newCartItem: CartItem = {
       id: randomUUID(),
       product,
       product_id: product.id,
       quantity: 1,
     };
+    console.log('Created new cart item:', newCartItem);
     setitems([newCartItem, ...items]);
   };
 
   const updateQuantity = (id: string, quantity: -1 | 1) => {
+    console.log('Updating quantity for item:', id, 'by:', quantity);
     const updatedItems = items
       .map((item) => {
         if (item.id === id) {
+          console.log('Found item to update:', item);
           return { ...item, quantity: item.quantity + quantity };
         }
         return item;
       })
       .filter((item) => item.quantity > 0);
+    console.log('Updated items:', updatedItems);
     setitems(updatedItems);
   };
 
@@ -92,10 +97,12 @@ const CartProvider = ({ children }: PropsWithChildren) => {
     0
   );
 
- 
-
   const saveOrderItems = (newOrder: any) => {
-    if (!newOrder) return;
+    console.log('Saving order items for order:', newOrder);
+    if (!newOrder) {
+      console.log('No order provided, aborting');
+      return;
+    }
 
     insertOrderItems(
       {
@@ -104,21 +111,36 @@ const CartProvider = ({ children }: PropsWithChildren) => {
       },
       {
         onSuccess() {
+          console.log('Order items saved successfully');
           setitems([]);
           router.push(`/(user)/orders/${newOrder.id}`);
-          console.log("Order created successfully");
         },
       }
     );
   };
 
-  const checkout = () => {
-    if (items.length === 0) return;
+  const checkout = (address?: string) => {
+    console.log('Starting checkout process');
+    if (items.length === 0) {
+      console.log('Cart is empty, aborting checkout');
+      return;
+    }
+
+    if (!address?.trim()) {
+      console.warn('Checkout called without an address');
+      return;
+    }
+
     const restaurant_id = items[0].product.restaurant_id;
+    console.log('Processing order:', { total, restaurant_id, address });
+    
     insert(
-      { total, restaurant_id },
-      {
-        onSuccess: saveOrderItems,
+      { total, restaurant_id, address },
+      { 
+        onSuccess: (data) => {
+          console.log('Order inserted successfully:', data);
+          saveOrderItems(data);
+        }
       }
     );
   };
